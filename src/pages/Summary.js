@@ -3,14 +3,13 @@ import API from "../api/api";
 
 function Summary(){
 
-  const [employeeId,setEmployeeId] = useState("");
   const [data,setData] = useState(null);
 
   const getSummary = async ()=>{
 
-    const res = await API.get(`/attendance/summary/${employeeId}`);
-
+    const res = await API.get("/attendance/summary/");
     setData(res.data);
+
   };
 
   return(
@@ -22,13 +21,6 @@ function Summary(){
       </h2>
 
       <div className="bg-white p-6 shadow rounded max-w-md">
-
-        <input
-          className="border p-2 w-full mb-4"
-          placeholder="Employee ID"
-          value={employeeId}
-          onChange={(e)=>setEmployeeId(e.target.value)}
-        />
 
         <button
           className="bg-blue-600 text-white px-4 py-2 rounded"

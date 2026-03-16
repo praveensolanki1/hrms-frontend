@@ -1,14 +1,21 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://hrms-backend-q1re.onrender.com"
+  baseURL: "http://localhost:8000/api"
 });
 
 export const getEmployees = () => API.get("/employees/");
 export const addEmployee = (data) => API.post("/employees/", data);
 
 export const markAttendance = (data) => API.post("/attendance/", data);
-export const getAttendance = (id) => API.get(`/attendance/${id}`);
-export const getSummary = (id) => API.get(`/attendance/summary/${id}`);
+
+export const getAttendance = (employeeId) =>
+  API.get(`/attendance/employee/${employeeId}/`);
+
+export const getSummary = () =>
+  API.get("/attendance/summary/");
+
+export const getEmployeeSummary = () =>
+  API.get("/employees/summary/");
 
 export default API;

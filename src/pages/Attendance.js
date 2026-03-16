@@ -4,9 +4,8 @@ import { markAttendance } from "../services/api";
 export default function Attendance(){
 
   const [form,setForm] = useState({
-    employee_id:"",
-    status:"present",
-    date:""
+    employee:"",
+    status:"Present"
   });
 
   const handleChange=(e)=>{
@@ -16,14 +15,31 @@ export default function Attendance(){
     });
   };
 
-  const submit = async(e)=>{
+const submit = async (e) => {
+  e.preventDefault();
 
-    e.preventDefault();
+  try {
 
     await markAttendance(form);
 
     alert("Attendance Marked");
-  };
+
+  } catch (error) {
+
+    const data = error.response?.data;
+
+    if(data?.employee){
+      alert(data.employee);
+    }
+    else if(data?.attendance){
+      alert(data.attendance);
+    }
+    else{
+      alert("Something went wrong");
+    }
+
+  }
+};
 
   return(
 
@@ -38,15 +54,8 @@ export default function Attendance(){
         <form onSubmit={submit} className="space-y-4">
 
           <input
-          name="employee_id"
+          name="employee"
           placeholder="Employee ID"
-          className="border p-2 w-full rounded"
-          onChange={handleChange}
-          />
-
-          <input
-          type="date"
-          name="date"
           className="border p-2 w-full rounded"
           onChange={handleChange}
           />
@@ -57,8 +66,8 @@ export default function Attendance(){
           onChange={handleChange}
           >
 
-            <option value="present">Present</option>
-            <option value="absent">Absent</option>
+            <option value="Present">Present</option>
+            <option value="Absent">Absent</option>
 
           </select>
 

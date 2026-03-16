@@ -3,76 +3,90 @@ import { addEmployee } from "../services/api";
 
 export default function AddEmployee() {
 
-  const [form,setForm] = useState({
-    name:"",
-    email:"",
-    department:""
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    department: "HR" 
   });
 
-  const handleChange = (e)=>{
+  const [error, setError] = useState("");
+
+  const handleChange = (e) => {
     setForm({
       ...form,
-      [e.target.name]:e.target.value
+      [e.target.name]: e.target.value
     });
   };
 
-  const submit = async(e)=>{
-    e.preventDefault();
+const submit = async (e) => {
+  e.preventDefault();
 
-    await addEmployee(form);
+  if (!form.name || !form.email || !form.department) {
+    setError("All fields are required.");
+    return;
+  }
 
-    alert("Employee Added");
-  };
+  try {
+    await addEmployee(form); 
+    alert("Employee Added Successfully!");
+    setForm({ name: "", email: "", department: "HR" });
+    setError("");
+  } catch (err) {
+    console.log(err.response.data);
+    setError(
+      err.response?.data?.email
+        ? `Email Error: ${err.response.data.email}`
+        : "Failed to add employee."
+    );
+  }
+};
 
-  return(
-
+  return (
     <div className="flex justify-center mt-10">
-
       <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+        <h2 className="text-xl font-bold mb-6 text-center">Add Employee</h2>
 
-        <h2 className="text-xl font-bold mb-6 text-center">
-          Add Employee
-        </h2>
+        {error && (
+          <div className="bg-red-100 text-red-700 p-2 rounded mb-4 text-center">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={submit} className="space-y-4">
-
           <input
-          name="name"
-          placeholder="Employee Name"
-          className="border p-2 w-full rounded"
-          onChange={handleChange}
+            name="name"
+            value={form.name}
+            placeholder="Employee Name"
+            className="border p-2 w-full rounded"
+            onChange={handleChange}
           />
 
           <input
-          name="email"
-          placeholder="Email"
-          className="border p-2 w-full rounded"
-          onChange={handleChange}
+            name="email"
+            value={form.email}
+            placeholder="Email"
+            className="border p-2 w-full rounded"
+            onChange={handleChange}
           />
 
           <select
-          name="department"
-          className="border p-2 w-full rounded"
-          onChange={handleChange}
+            name="department"
+            value={form.department}
+            className="border p-2 w-full rounded"
+            onChange={handleChange}
           >
-
-            <option value="">Select Department</option>
             <option value="HR">HR</option>
             <option value="Engineering">Engineering</option>
             <option value="Finance">Finance</option>
-
           </select>
 
           <button
-          className="bg-blue-600 text-white w-full py-2 rounded hover:bg-blue-700"
+            className="bg-blue-600 text-white w-full py-2 rounded hover:bg-blue-700"
           >
-          Add Employee
+            Add Employee
           </button>
-
         </form>
-
       </div>
-
     </div>
   );
 }
